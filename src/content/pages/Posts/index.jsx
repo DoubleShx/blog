@@ -28,6 +28,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { httpGet } from 'src/api';
 import { SkeletonWrapper } from 'src/components/skeleton/skeletonWrapper';
 import { PostSettings } from './postSettings';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPosts } from 'src/store/actions/posts';
+import { fetchUsers } from 'src/store/actions/users';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -41,44 +44,33 @@ const ExpandMore = styled((props) => {
 }));
 
 function Cards() {
-  const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
   const [paginatedPosts, setPaginatedPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(9);
+  const [expanded, setExpanded] = useState(false);
+  const store = useSelector(state => state)
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    getUsersAndPosts();
+    if (store.users.users.length) {
+      dispatch(fetchPosts(store.users.users))
+    }
+    else {
+      dispatch(fetchUsers(getPostsByCallback))
+    }
   }, []);
 
-  const getPosts = (users) => {
-    httpGet({ url: '/posts' })
-      .then((res) => {
-        let posts = res.data.map((post) => {
-          let user_info = users.filter((user) => user.id === post.userId)[0]
-          return {
-            ...post,
-            user_name: user_info?.name,
-            user_address: `${user_info?.address?.city} ${user_info?.address?.street}`
-          };
-        });
-        setPosts(posts);
-        const start = (page - 1) * perPage;
-        setPaginatedPosts([...posts.slice(start, start + perPage)]);
-      })
-      .catch((err) => console.log(err));
-  };
+  useEffect(() => {
+    if (store.posts.posts.length) {
+    const start = (page - 1) * perPage;
+    setPaginatedPosts([...store.posts.posts.slice(start, start + perPage)]);
+    }
+  }, [store.posts])
 
-  const getUsersAndPosts = () => {
-    httpGet({ url: '/users' })
-      .then((res) => {
-        let fetchedUsers = res.data;
-        setUsers(fetchedUsers);
-        getPosts(fetchedUsers);
-      })
-      .catch((err) => console.log(err));
-  };
+  let getPostsByCallback = (users) => {
+    dispatch(fetchPosts(users))
+  }
 
-  const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = (post) => {
     setExpanded((expanded) => (expanded !== post.id ? post.id : false));
@@ -88,10 +80,10 @@ function Cards() {
     if (value !== page && value) {
       const start = (value - 1) * perPage;
       setPage(value);
-      setPaginatedPosts([...posts.slice(start, start + perPage)]);
+      setPaginatedPosts([...store.posts.posts.slice(start, start + perPage)]);
     }
   };
-  console.log(posts, 'posts', 'users', users);
+
   return (
     <>
       <Helmet>
@@ -112,7 +104,7 @@ function Cards() {
           alignItems="stretch"
           spacing={3}
         >
-          {posts.length ? (
+          {paginatedPosts.length ? (
             <Grid container spacing={3}>
               {' '}
               {paginatedPosts.map((post) => (
@@ -181,7 +173,7 @@ function Cards() {
                 </Grid>
               ))}
               <Pagination
-                count={Math.ceil(posts.length / 9 - 1)}
+                count={Math.ceil(store.posts.posts.length / perPage - 1)}
                 color="primary"
                 page={page}
                 onChange={handlePaginate}

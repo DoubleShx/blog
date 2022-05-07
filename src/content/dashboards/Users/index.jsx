@@ -17,12 +17,12 @@ function Users() {
 
   useEffect(() => {
     if (!users.length) {
-      dispatch(fetchUsers('2'))
+      dispatch(fetchUsers())
     }      
   }, []);
   
   return (
-    <div onClick={()=>console.log(user)}>
+    <div>
       <Helmet>
         <title>Users</title>
       </Helmet>
