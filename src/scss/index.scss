@@ -1,3 +1,32 @@
-html {
-    
+/*----------------------------Notifications------------------------------*/
+
+.notyf__toast.notyf-warning .notyf__dismiss-btn,
+.notyf__toast.notyf-warning:before {
+  background-color: orange;
+}
+
+.notyf__toast.notyf__toast--error .notyf__dismiss-btn,
+.notyf__toast.notyf__toast--error:before {
+  background-color: #e94627;
+}
+
+.notyf__toast.notyf__toast--success .notyf__dismiss-btn,
+.notyf__toast.notyf__toast--success:before {
+  background-color: #5dae4c;
+}
+
+.notyf__dismiss-btn {
+  opacity: 1 !important;
+}
+
+.notyf__dismiss-btn:hover {
+  opacity: 0.75 !important;
+}
+
+.notyf__dismiss-btn:focus {
+  outline: none;
+}
+
+.notyf__toast.notyf__toast--success .notyf__dismiss-btn, .notyf__toast.notyf__toast--success:before, .notyf__toast--lower {
+    background-color: #5dae4c;
 }

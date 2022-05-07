@@ -16,6 +16,7 @@
     "clsx": "1.1.1",
     "date-fns": "2.25.0",
     "history": "5.0.1",
+    "notyf": "^3.10.0",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "prop-types": "15.7.2",

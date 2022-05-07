@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import 'nprogress/nprogress.css';
 import './scss/index.scss';
+import 'notyf/notyf.min.css';
 import { SidebarProvider } from './contexts/SidebarContext';
 
 import { Provider } from 'react-redux'

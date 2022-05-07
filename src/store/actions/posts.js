@@ -1,5 +1,5 @@
 import { httpGet } from 'src/api'
-import { FETCH_POSTS } from '../types/posts'
+import { FETCH_POSTS, SET_POSTS } from '../types/posts'
 
 export const fetchPosts = (users=[]) => async dispatch => {
   await httpGet({
@@ -30,6 +30,13 @@ export const fetchPosts = (users=[]) => async dispatch => {
       })
     })
     .catch(e => console.log(e))
+}
+
+export const setPosts = (posts) => dispatch => {
+  dispatch({
+    type: SET_POSTS,
+    payload: posts || []
+  })
 }
 
 

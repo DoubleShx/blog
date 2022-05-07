@@ -1,5 +1,5 @@
 import { httpGet } from 'src/api'
-import { FETCH_USERS } from '../types/users'
+import { FETCH_USERS, SET_USERS } from '../types/users'
 
 export const fetchUsers = (callback="") => async dispatch => {
   await httpGet({
@@ -15,6 +15,13 @@ export const fetchUsers = (callback="") => async dispatch => {
       }
     })
     .catch(e => console.log(e))
+}
+
+export const setUsers = (users) => dispatch => {
+  dispatch({
+    type: SET_USERS,
+    payload: users || []
+  })
 }
 
 

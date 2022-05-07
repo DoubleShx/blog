@@ -61,11 +61,13 @@ function Cards() {
   }, []);
 
   useEffect(() => {
+    console.log('store changed 1', store)
     if (store.posts.posts.length) {
+      console.log('store changed 2')
     const start = (page - 1) * perPage;
     setPaginatedPosts([...store.posts.posts.slice(start, start + perPage)]);
     }
-  }, [store.posts])
+  }, [store])
 
   let getPostsByCallback = (users) => {
     dispatch(fetchPosts(users))
@@ -85,7 +87,9 @@ function Cards() {
   };
 
   return (
-    <>
+    <div 
+    // onClick={()=>console.log(paginatedPosts)}
+    >
       <Helmet>
         <title>Posts</title>
       </Helmet>
@@ -164,7 +168,7 @@ function Cards() {
                           unmountOnExit
                         >
                           <CardContent>
-                            <PostSettings post={post} />
+                            <PostSettings post={post} users={store.users.users} allPosts={store.posts.posts}/>
                           </CardContent>
                         </Collapse>
                       </Card>
@@ -194,7 +198,7 @@ function Cards() {
         </Grid>
       </Container>
       <Footer />
-    </>
+    </div>
   );
 }
 
