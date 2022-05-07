@@ -42,21 +42,41 @@ const ExpandMore = styled((props) => {
 
 function Cards() {
   const [posts, setPosts] = useState([]);
-  const [paginatedPosts, setPaginatedPosts] = useState([])
-  const [page, setPage] = useState(1)
-  const [perPage, setPerPage] = useState(9)
+  const [users, setUsers] = useState([]);
+  const [paginatedPosts, setPaginatedPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(9);
   useEffect(() => {
+    getUsersAndPosts();
+  }, []);
+
+  const getPosts = (users) => {
     httpGet({ url: '/posts' })
       .then((res) => {
-        let posts = res.data
+        let posts = res.data.map((post) => {
+          let user_info = users.filter((user) => user.id === post.userId)[0]
+          return {
+            ...post,
+            user_name: user_info?.name,
+            user_address: `${user_info?.address?.city} ${user_info?.address?.street}`
+          };
+        });
         setPosts(posts);
-        const start = (page-1) * perPage
-        setPaginatedPosts([
-          ...posts.slice(start, start+perPage)
-        ])
+        const start = (page - 1) * perPage;
+        setPaginatedPosts([...posts.slice(start, start + perPage)]);
       })
       .catch((err) => console.log(err));
-  }, []);
+  };
+
+  const getUsersAndPosts = () => {
+    httpGet({ url: '/users' })
+      .then((res) => {
+        let fetchedUsers = res.data;
+        setUsers(fetchedUsers);
+        getPosts(fetchedUsers);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const [expanded, setExpanded] = useState(false);
 
@@ -66,14 +86,12 @@ function Cards() {
 
   const handlePaginate = (e, value) => {
     if (value !== page && value) {
-    const start = (value-1) * perPage
-    setPage(value)
-    setPaginatedPosts([
-      ...posts.slice(start, start+perPage)
-    ])
-  }
-  }
-
+      const start = (value - 1) * perPage;
+      setPage(value);
+      setPaginatedPosts([...posts.slice(start, start + perPage)]);
+    }
+  };
+  console.log(posts, 'posts', 'users', users);
   return (
     <>
       <Helmet>
@@ -116,8 +134,8 @@ function Cards() {
                               <MoreVertIcon />
                             </IconButton>
                           }
-                          title="Shrimp and Chorizo Paella"
-                          subheader="September 14, 2016"
+                          title={post.user_name}
+                          subheader={post.user_address}
                         />
                         <CardMedia
                           sx={{
@@ -154,14 +172,20 @@ function Cards() {
                           unmountOnExit
                         >
                           <CardContent>
-                            <PostSettings user={post} />
+                            <PostSettings post={post} />
                           </CardContent>
                         </Collapse>
                       </Card>
                     </CardContent>
                   </Card>
                 </Grid>
-              ))}<Pagination count={Math.ceil((posts.length/9)-1)} color="primary" page={page} onChange={handlePaginate} />
+              ))}
+              <Pagination
+                count={Math.ceil(posts.length / 9 - 1)}
+                color="primary"
+                page={page}
+                onChange={handlePaginate}
+              />
             </Grid>
           ) : (
             [...Array(20)].map((item, index) => {
