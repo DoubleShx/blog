@@ -9,7 +9,11 @@ import 'nprogress/nprogress.css';
 import './scss/index.scss';
 import { SidebarProvider } from './contexts/SidebarContext';
 
+import { Provider } from 'react-redux'
+import store from './store/store'
+
 ReactDOM.render(
+    <Provider store={store}>
   <HelmetProvider>
     <SidebarProvider>
       <BrowserRouter>
@@ -17,6 +21,7 @@ ReactDOM.render(
       </BrowserRouter>
     </SidebarProvider>
   </HelmetProvider>,
+     </Provider>,
   document.getElementById('root')
 );
 

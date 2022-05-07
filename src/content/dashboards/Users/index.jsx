@@ -1,26 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
 import Footer from 'src/components/Footer';
-import { Container, Grid, Skeleton, Tab, Tabs } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import PageTitleWrapper from 'src/components/PageTitleWrapper';
 
 import TeamOverview from './TeamOverview';
 import Performance from './Performance';
-import { httpGet } from 'src/api';
 import { SkeletonWrapper } from 'src/components/skeleton/skeletonWrapper';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers } from 'src/store/actions/users';
 
 function Users() {
-  const [users, setUsers] = useState([]);
+  const dispatch = useDispatch()
+  const { users }  = useSelector(state => state.users)
 
   useEffect(() => {
-    httpGet({ url: '/users' })
-      .then((res) => setUsers(res.data))
-      .catch((err) => console.log(err));
+    if (!users.length) {
+      dispatch(fetchUsers('2'))
+    }      
   }, []);
-
+  
   return (
-    <>
+    <div onClick={()=>console.log(user)}>
       <Helmet>
         <title>Users</title>
       </Helmet>
@@ -67,7 +69,7 @@ function Users() {
         </Grid>
       </Container>
       <Footer />
-    </>
+    </div>
   );
 }
 
