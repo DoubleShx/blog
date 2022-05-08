@@ -25,7 +25,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import SettingsIcon from '@mui/icons-material/Settings';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { httpGet } from 'src/api';
 import { SkeletonWrapper } from 'src/components/skeleton/skeletonWrapper';
 import { PostSettings } from './postSettings';
 import { useDispatch, useSelector } from 'react-redux';
@@ -61,9 +60,7 @@ function Cards() {
   }, []);
 
   useEffect(() => {
-    console.log('store changed 1', store)
     if (store.posts.posts.length) {
-      console.log('store changed 2')
     const start = (page - 1) * perPage;
     setPaginatedPosts([...store.posts.posts.slice(start, start + perPage)]);
     }
@@ -87,9 +84,7 @@ function Cards() {
   };
 
   return (
-    <div 
-    // onClick={()=>console.log(paginatedPosts)}
-    >
+    <div >
       <Helmet>
         <title>Posts</title>
       </Helmet>
@@ -168,7 +163,7 @@ function Cards() {
                           unmountOnExit
                         >
                           <CardContent>
-                            <PostSettings post={post} users={store.users.users} allPosts={store.posts.posts}/>
+                            <PostSettings post={post} users={store.users.users} allPosts={store.posts.posts} closeAccordion={()=>setExpanded(false)}/>
                           </CardContent>
                         </Collapse>
                       </Card>

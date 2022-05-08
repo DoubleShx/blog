@@ -49,7 +49,7 @@ function Users() {
               <Grid item xs={12}>
                 <Grid container spacing={3}>
                   {users.map((user) => {
-                    return <TeamOverview key={user.id} user={user} />;
+                    return <TeamOverview key={user.id} user={user} users={users}/>;
                   })}
                 </Grid>
               </Grid>
